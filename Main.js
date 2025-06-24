@@ -44,8 +44,8 @@
                     "https://placehold.co/800x600/87CEEB/6A5ACD?text=Acolchado+Cama+3"
                 ]
             },
-            "manta-lana": {
-                name: "Manta de Lana Tejida Artesanal",
+            "blackout": {
+                name: "Cortina Blackout",
                 price: "$28.000",
                 description: "Envuelve tu hogar en calidez y estilo con nuestra manta de lana tejida artesanalmente. Su textura suave y diseño acogedor la hacen ideal para el sofá o como complemento decorativo en tu cama. Confeccionada con materiales de alta calidad, garantizando colores naturales y duraderos.",
                 images: [
@@ -54,8 +54,8 @@
                     "https://placehold.co/800x600/FFE082/FFC107?text=Manta+en+Sillon+3"
                 ]
             },
-            "funda-almohada": {
-                name: "Funda de Almohada Decorativa Premium",
+            "cortina-baño": {
+                name: "Cortina de baño - Razo",
                 price: "$8.000",
                 description: "Añade un toque de color y sofisticación a tu dormitorio con nuestras fundas de almohada decorativas. Confeccionadas con tejidos suaves y duraderos, son el complemento perfecto para cualquier estilo de decoración, brindando confort y elegancia a tu espacio.",
                 images: [
@@ -74,8 +74,8 @@
                     "https://placehold.co/800x600/FFEBEE/C62828?text=Repasadores+Colores+3"
                 ]
             },
-            "cortinas-opacas": {
-                name: "Cortinas Opacas Modernas",
+            "sabanas-infantiles": {
+                name: "Juego de Sabanas Infantiles",
                 price: "$35.000",
                 description: "Nuestras cortinas opacas ofrecen privacidad total y un control excepcional de la luz. Ideales para dormitorios o salas de estar, ayudan a mantener la temperatura ambiente y a reducir el ruido exterior. Su instalación es sencilla y su caída elegante complementa cualquier espacio.",
                 images: [
@@ -84,8 +84,8 @@
                     "https://placehold.co/800x600/FFECB3/FF8F00?text=Cortina+Abierta+3"
                 ]
             },
-            "cubrecama-estampado": {
-                name: "Cubrecama Estampado con Diseños Exclusivos",
+            "Mantas": {
+                name: "Mantas Plush / corderito",
                 price: "$55.000",
                 description: "Renueva tu habitación con nuestro cubrecama estampado, disponible en una variedad de diseños modernos y vibrantes. Ligero y fácil de mantener, es perfecto para añadir un toque de personalidad a tu cama sin sacrificar la comodidad ni la calidad del descanso.",
                 images: [
