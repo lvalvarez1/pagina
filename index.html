@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Decocuotas - Blanquería con Estilo</title>
+    <!-- Bootstrap CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" xintegrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./styles.css">
+    
+</head>
+<body>
+    <div class="d-flex flex-column min-vh-100">
+        <!-- Header -->
+        <header class="bg-white shadow-sm py-3 py-md-4 sticky-top rounded-bottom-3 z-1000">
+            <nav class="navbar navbar-expand-md navbar-light container">
+                <!-- Logo a la izquierda -->
+            <a class="navbar-brand" href="#home">
+                <img src="./img/Deco.png" alt="Decocuotas Logo" class="img-fluid" style="height: 90px; border-radius: 8px;">
+            </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                    <ul class="navbar-nav gap-3 gap-md-0">
+                        <li class="nav-item">
+                            <a class="nav-link text-secondary rounded-custom px-3 py-2 fw-bold" href="#home">Inicio</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-secondary rounded-custom px-3 py-2 fw-bold" href="#productos">Productos</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-secondary rounded-custom px-3 py-2 fw-bold" href="#nosotros">Nosotros</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-secondary rounded-custom px-3 py-2 fw-bold" href="#contacto">Contacto</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <main class="flex-grow-1">
+            <!-- Hero Section -->
+            <section id="home" class="position-relative bg-hero-section py-5 py-md-6 text-center overflow-hidden rounded-custom mx-3 my-4">
+                <div class="position-absolute top-0 start-0 w-100 h-100 bg-cover bg-center opacity-50" style="background-color: rgb(255, 68, 177);"></div>
+                <div class="position-relative z-1 container px-3">
+                    <h1 class="display-4 fw-medium text-dark mb-3 rounded-custom">
+                        Estilo y Comodidad para tu Hogar
+                    </h1>
+                    <p class="fs-5 text-secondary mb-5 mx-auto rounded-custom" style="max-width: 50rem;">
+                        Descubre la blanquería que transformará cada rincón de tu casa en un oasis de confort.
+                    </p>
+                    <a href="https://wa.me/5491112345678?text=Hola!%20Estoy%20interesado%20en%20sus%20productos." target="_blank" class="btn btn-lg btn-custom-cyan text-white fw-bold py-3 px-5 rounded-pill shadow-lg">
+                        Ver Productos
+                    </a>
+                </div>
+            </section>
+
+            <!-- Featured Products Section -->
+            <section id="productos" class="py-5 py-md-6 container px-3 rounded-custom bg-white shadow-lg my-4">
+                <h2 class="fs-2 fw-bold text-dark text-center mb-5 rounded-custom">Nuestros Productos Destacados</h2>
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4">
+                    <!-- Product Card 1: Juego de Sábanas -->
+                    <div class="col">
+                        <div class="card h-100 border border-secondary-subtle rounded-custom shadow-sm overflow-hidden product-card">
+                            <img src="./img/sabana.jpg" alt="Juego de Sábanas" class="card-img-top w-100 h-120px object-fit-cover rounded-top-3">
+                            <div class="card-body p-4">
+                                <h3 class="card-title fs-5 fw-semibold text-dark mb-2">Juego de Sábanas Premium</h3>
+                                <p class="card-text text-secondary mb-3">Suavidad y confort para tu descanso.</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="fs-4 fw-bold text-violet-custom">$45.000</span>
+                                    <a href="https://wa.me/5491112345678?text=Hola!%20Estoy%20interesado%20en%20el%20Juego%20de%20S%C3%A1banas%20Premium." target="_blank" class="btn btn-sm btn-custom-cyan text-white fw-medium rounded-pill">Comprar</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product Card 2: Toallas de Algodón -->
+                    <div class="col">
+                        <div class="card h-100 border border-secondary-subtle rounded-custom shadow-sm overflow-hidden product-card">
+                            <img src="./img/toallas.jpg" alt="Toallas de Algodón" class="card-img-top w-100 h-120px object-fit-cover rounded-top-3">
+                            <div class="card-body p-4">
+                                <h3 class="card-title fs-5 fw-semibold text-dark mb-2">Toallas de Algodón Egipcio</h3>
+                                <p class="card-text text-secondary mb-3">Máxima absorción y durabilidad.</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="fs-4 fw-bold text-violet-custom">$18.000</span>
+                                    <a href="https://wa.me/5491112345678?text=Hola!%20Estoy%20interesado%20en%20las%20Toallas%20de%20Algod%C3%B3n%20Egipcio." target="_blank" class="btn btn-sm btn-custom-cyan text-white fw-medium rounded-pill">Comprar</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product Card 3: Acolchado de Invierno -->
+                    <div class="col">
+                        <div class="card h-100 border border-secondary-subtle rounded-custom shadow-sm overflow-hidden product-card">
+                            <img src="./img/edredon.jpg" alt="Acolchado de Invierno" class="card-img-top w-100 h-120px object-fit-cover rounded-top-3">
+                            <div class="card-body p-4">
+                                <h3 class="card-title fs-5 fw-semibold text-dark mb-2">Acolchado de Invierno King Size</h3>
+                                <p class="card-text text-secondary mb-3">Calidez y elegancia para tus noches.</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="fs-4 fw-bold text-violet-custom">$75.000</span>
+                                    <a href="https://wa.me/5491112345678?text=Hola!%20Estoy%20interesado%20en%20el%20Acolchado%20de%20Invierno%20King%20Size." target="_blank" class="btn btn-sm btn-custom-cyan text-white fw-medium rounded-pill">Comprar</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center mt-5">
+                    <a href="https://wa.me/5491112345678?text=Hola!%20Me%20gustar%C3%ADa%20ver%20todos%20sus%20productos." target="_blank" class="btn btn-lg btn-custom-cyan text-white fw-bold py-3 px-5 rounded-pill shadow-lg">
+                        Ver Todos los Productos
+                    </a>
+                </div>
+            </section>
+
+            <!-- About Us Section -->
+            <section id="nosotros" class="bg-hero-section py-5 py-md-6 container px-3 rounded-custom shadow-lg my-4">
+                <div class="row g-4 align-items-center">
+                    <div class="col-md-6 order-md-2">
+                        <img src="./img/Deco.png" alt="Acerca de Decocuotas" class="img-fluid rounded-custom shadow-lg">
+                    </div>
+                    <div class="col-md-6 order-md-1 text-center text-md-start">
+                        <h2 class="fs-2 fw-bold text-dark mb-4 rounded-custom">Sobre Decocuotas</h2>
+                        <p class="fs-5 text-secondary lh-lg mb-3 rounded-custom">
+                            En Decocuotas, nos dedicamos a ofrecer blanquería de alta calidad que combina diseño, confort y durabilidad. Creemos que cada hogar merece lo mejor, y por eso seleccionamos cuidadosamente los materiales y los diseños para brindarte productos que ames.
+                        </p>
+                        <p class="fs-5 text-secondary lh-lg rounded-custom">
+                            Nuestra misión es hacer que tu casa sea un reflejo de tu estilo personal, con opciones para cada habitación y para cada gusto. Explora nuestra colección y encuentra la pieza perfecta para ti.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Testimonials Section -->
+            <section class="py-5 py-md-6 container px-3 rounded-custom bg-white shadow-lg my-4">
+                <h2 class="fs-2 fw-bold text-dark text-center mb-5 rounded-custom">Lo que Dicen Nuestros Clientes</h2>
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                    <!-- Testimonial 1 -->
+                    <div class="col">
+                        <div class="card h-100 bg-body-tertiary p-4 rounded-custom shadow-sm border border-secondary-subtle">
+                            <p class="text-secondary fst-italic mb-3">"Las sábanas son increíblemente suaves y se sienten de lujo. ¡Mi cama nunca fue tan cómoda!"</p>
+                            <p class="fw-semibold text-dark mb-0">- María L.</p>
+                            <p class="text-sm text-secondary">Buenos Aires, San Miguel</p>
+                        </div>
+                    </div>
+                    <!-- Testimonial 2 -->
+                    <div class="col">
+                        <div class="card h-100 bg-body-tertiary p-4 rounded-custom shadow-sm border border-secondary-subtle">
+                            <p class="text-secondary fst-italic mb-3">"Compré un acolchado y superó mis expectativas. Excelente calidad y el diseño es hermoso."</p>
+                            <p class="fw-semibold text-dark mb-0">- Juan P.</p>
+                            <p class="text-sm text-secondary">Buenos Aires, Moreno</p>
+                        </div>
+                    </div>
+                    <!-- Testimonial 3 -->
+                    <div class="col">
+                        <div class="card h-100 bg-body-tertiary p-4 rounded-custom shadow-sm border border-secondary-subtle">
+                            <p class="text-secondary fst-italic mb-3">"La atención al cliente fue fantástica y el envío muy rápido. ¡Recomiendo Decocuotas al 100%!"</p>
+                            <p class="fw-semibold text-dark mb-0">- Sofía G.</p>
+                            <p class="text-sm text-secondary">Buenos Aires, Malvinas Arg.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Contact Section -->
+            <section id="contacto" class="bg-hero-section py-5 py-md-6 container px-3 rounded-custom shadow-lg my-4">
+                <h2 class="fs-2 fw-bold text-dark text-center mb-5 rounded-custom">Contáctanos</h2>
+                <div class="card mx-auto bg-white p-4 p-md-5 rounded-custom shadow-sm border border-secondary-subtle" style="max-width: 30rem;">
+                    <form>
+                        <div class="mb-4">
+                            <label for="name" class="form-label text-dark fw-bold">Nombre:</label>
+                            <input type="text" id="name" name="name" class="form-control rounded-custom py-3 px-4 focus-ring-cyan" placeholder="Tu Nombre" required>
+                        </div>
+                        <div class="mb-4">
+                            <label for="email" class="form-label text-dark fw-bold">Email:</label>
+                            <input type="email" id="email" name="email" class="form-control rounded-custom py-3 px-4 focus-ring-cyan" placeholder="tu@email.com" required>
+                        </div>
+                        <div class="mb-5">
+                            <label for="message" class="form-label text-dark fw-bold">Mensaje:</label>
+                            <textarea id="message" name="message" rows="5" class="form-control rounded-custom py-3 px-4 resize-vertical focus-ring-cyan" placeholder="Escribe tu mensaje aquí..." required></textarea>
+                        </div>
+                        <div class="d-flex justify-content-center">
+                            <button type="submit" class="btn btn-custom-cyan text-white fw-bold py-3 px-5 rounded-pill">
+                                Enviar Mensaje
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-dark text-white py-4 mt-5 rounded-top-3">
+            <div class="container px-3 text-center">
+                <p class="mb-3 rounded-custom">&copy; 2025 Decocuotas. Todos los derechos reservados.</p>
+                <div class="d-flex justify-content-center gap-4">
+                    <a href="#"><img src="./img/facebook.png" alt="facebook"></a>
+                    <a href="#"> <img src="./img/instagram.png" alt="instagram"></a>
+                    <a href="#"> <img src="./img/youtube.png" alt="youtube"></a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" xintegrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+
+</html>

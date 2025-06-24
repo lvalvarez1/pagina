@@ -1,0 +1,39 @@
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f8f8; /* Light background color */
+        }
+        /* Custom styles for gradients and shadows not directly available in Bootstrap utilities */
+        .hero-section {
+            background: linear-gradient(to right, #e0f7fa, #bbdefb); /* Cyan 50 to Blue 100 equivalent */
+        }
+        .rounded-custom {
+            border-radius: 0.75rem !important; /* Tailwind's rounded-xl equivalent */
+        }
+        .product-card:hover {
+            transform: scale(1.05);
+            transition: transform 0.3s ease-in-out;
+        }
+        .btn-custom-cyan {
+            background-color: #eeb0e1; /* Tailwind cyan-600 */
+            border-color: #eeb0e1;
+        }
+        .btn-custom-cyan:hover {
+            background-color: #eb29f1; /* Tailwind cyan-700 */
+            border-color: #eb29f1;
+        }
+        .text-cyan-custom {
+            color: #06B6D4; /* Tailwind cyan-600 */
+        }
+        .hover-text-cyan:hover {
+            color: #4DD0E1; /* Tailwind cyan-400 */
+        }
+        .focus-ring-cyan:focus {
+            box-shadow: 0 0 0 0.25rem rgba(6, 182, 212, 0.25); /* Focus ring equivalent for cyan */
+            border-color: #06B6D4;
+        }
+
+      .text-violet-custom{
+        color: #8A2BE2;
+      }
+    </style>
