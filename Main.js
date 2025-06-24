@@ -14,32 +14,32 @@
 
         // Product Data (simulated database) - All products now in this single object
         const productsData = {
-            "sabanas-algodon": {
-                name: "Juego de Sábanas de Algodón Premium",
+            "sabanas": {
+                name: "Juego de Sábanas Premium",
                 price: "$45.000",
-                description: "Nuestro juego de sábanas premium de algodón ofrece una suavidad inigualable y una durabilidad excepcional. Perfecto para transformar tu cama en un oasis de confort. Disponible en varios colores y tamaños para adaptarse a cualquier estilo de dormitorio.",
+                description: "Nuestro juego de sábanas premium ofrece una suavidad inigualable y una durabilidad excepcional. Perfecto para transformar tu cama en un oasis de confort. Disponible en varios colores y tamaños para adaptarse a cualquier estilo de dormitorio.",
                 images: [
-                    "https://placehold.co/800x600/E5E7EB/4B5563?text=Sabana+Blanca+1",
+                    "img/sabana.jpg",
                     "https://placehold.co/800x600/D1D5DB/1F2937?text=Sabana+Detalle+2",
                     "https://placehold.co/800x600/B8B8B8/333333?text=Sabana+Ambiente+3"
                 ]
             },
-            "toallas-lujo": {
-                name: "Set de Toallas de Algodón Egipcio",
+            "toallas": {
+                name: "Set de Toallas",
                 price: "$18.000",
                 description: "Experimenta la máxima absorción y suavidad con nuestro set de toallas de algodón egipcio. Ideales para el uso diario, estas toallas conservan su esponjosidad lavado tras lavado, garantizando una experiencia de lujo en cada uso. Incluye toalla de mano, de cara y de baño.",
                 images: [
-                    "https://placehold.co/800x600/D1F2EB/2E8B57?text=Toallas+Azules+1",
+                    "img/toallas.jpg",
                     "https://placehold.co/800x600/C8F8F0/1ABC9C?text=Toalla+Plegada+2",
                     "https://placehold.co/800x600/B3E0DD/008080?text=Toalla+Textura+3"
                 ]
             },
-            "acolchado-reversible": {
-                name: "Acolchado Reversible King Size",
+            "edredon": {
+                name: "Edredon de 2 1/2 - Premium",
                 price: "$75.000",
-                description: "Este acolchado king size te ofrece calidez y versatilidad con su diseño reversible, permitiéndote cambiar el estilo de tu habitación al instante. Perfecto para darle un nuevo aire a tu espacio, combinando confort y un estilo moderno y práctico. Relleno hipoalergénico y fácil de cuidar.",
+                description: "Este edredon Queen size te ofrece calidez y versatilidad con su diseño reversible, permitiéndote cambiar el estilo de tu habitación al instante. Perfecto para darle un nuevo aire a tu espacio, combinando confort y un estilo moderno y práctico. Relleno hipoalergénico y fácil de cuidar.",
                 images: [
-                    "https://placehold.co/800x600/ADD8E6/1E90FF?text=Acolchado+Gris+1",
+                    "img/edredon.jpg",
                     "https://placehold.co/800x600/B0C4DE/4682B4?text=Acolchado+Reverso+2",
                     "https://placehold.co/800x600/87CEEB/6A5ACD?text=Acolchado+Cama+3"
                 ]
