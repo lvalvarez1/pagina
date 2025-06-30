@@ -16,12 +16,12 @@
         const productsData = {
             "sabanas": {
                 name: "Juego de Sábanas Premium",
-                price: "$45.000",
+                price: "$50.000",
                 description: "Nuestro juego de sábanas premium ofrece una suavidad inigualable y una durabilidad excepcional. Perfecto para transformar tu cama en un oasis de confort. Disponible en varios colores y tamaños para adaptarse a cualquier estilo de dormitorio.",
                 images: [
                     "img/sabana.jpg",
-                    "https://placehold.co/800x600/D1D5DB/1F2937?text=Sabana+Detalle+2",
-                    "https://placehold.co/800x600/B8B8B8/333333?text=Sabana+Ambiente+3"
+                    "img/sabana-2.jpg",
+                    "img/sabana-3.jpeg",
                 ]
             },
             "toallas": {
@@ -29,39 +29,39 @@
                 price: "$18.000",
                 description: "Experimenta la máxima absorción y suavidad con nuestro set de toallas de algodón egipcio. Ideales para el uso diario, estas toallas conservan su esponjosidad lavado tras lavado, garantizando una experiencia de lujo en cada uso. Incluye toalla de mano, de cara y de baño.",
                 images: [
-                    "img/toallas.jpg",
-                    "https://placehold.co/800x600/C8F8F0/1ABC9C?text=Toalla+Plegada+2",
-                    "https://placehold.co/800x600/B3E0DD/008080?text=Toalla+Textura+3"
+                    "img/toallas-2.jpg",
+                    "img/toallas-3.jpg",
+                    "img/toallas-4.jpg"
                 ]
             },
             "edredon": {
                 name: "Edredon de 2 1/2 - Premium",
-                price: "$75.000",
+                price: "$80.000",
                 description: "Este edredon Queen size te ofrece calidez y versatilidad con su diseño reversible, permitiéndote cambiar el estilo de tu habitación al instante. Perfecto para darle un nuevo aire a tu espacio, combinando confort y un estilo moderno y práctico. Relleno hipoalergénico y fácil de cuidar.",
                 images: [
                     "img/edredon.jpg",
-                    "https://placehold.co/800x600/B0C4DE/4682B4?text=Acolchado+Reverso+2",
-                    "https://placehold.co/800x600/87CEEB/6A5ACD?text=Acolchado+Cama+3"
-                ]
+                    "img/edredon-2.jpg",
+                    "img/edredon-3.jpg"
+                 ]
             },
             "blackout": {
                 name: "Cortina Blackout",
-                price: "$28.000",
+                price: "$80.000",
                 description: "Envuelve tu hogar en calidez y estilo con nuestra manta de lana tejida artesanalmente. Su textura suave y diseño acogedor la hacen ideal para el sofá o como complemento decorativo en tu cama. Confeccionada con materiales de alta calidad, garantizando colores naturales y duraderos.",
                 images: [
-                    "https://placehold.co/800x600/FFECB3/FFA000?text=Manta+de+lana+1",
-                    "https://placehold.co/800x600/FFD54F/FF8F00?text=Manta+Textura+2",
-                    "https://placehold.co/800x600/FFE082/FFC107?text=Manta+en+Sillon+3"
+                    "img/blackout.jpg",
+                    "img/blackout-2.jpeg",
+                    "img/blackout-3.jpeg"
                 ]
             },
             "cortina-baño": {
                 name: "Cortina de baño - Razo",
-                price: "$8.000",
+                price: "$15.000",
                 description: "Añade un toque de color y sofisticación a tu dormitorio con nuestras fundas de almohada decorativas. Confeccionadas con tejidos suaves y duraderos, son el complemento perfecto para cualquier estilo de decoración, brindando confort y elegancia a tu espacio.",
                 images: [
-                    "https://placehold.co/800x600/C8E6C9/4CAF50?text=Funda+almohada+1",
-                    "https://placehold.co/800x600/A5D6A7/388E3C?text=Funda+Detalle+2",
-                    "https://placehold.co/800x600/81C784/2E7D32?text=Funda+Combinada+3"
+                    "img/cortina-1.jpeg",
+                    "img/cortina-2.jpg",
+                    "img/cortina-3.jpg"
                 ]
             },
             "set-repasadores": {
