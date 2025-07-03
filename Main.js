@@ -27,7 +27,7 @@
             "toallas": {
                 name: "Set de Toallas",
                 price: "$18.000",
-                description: "Experimenta la máxima absorción y suavidad con nuestro set de toallas de algodón egipcio. Ideales para el uso diario, estas toallas conservan su esponjosidad lavado tras lavado, garantizando una experiencia de lujo en cada uso. Incluye toalla de mano, de cara y de baño.",
+                description: "Experimenta la máxima absorción y suavidad con nuestro set de toallas de 420g. Ideales para el uso diario, estas toallas conservan su esponjosidad lavado tras lavado, garantizando una experiencia de lujo en cada uso. Incluye toalla de mano y de cara.",
                 images: [
                     "img/toallas-2.jpg",
                     "img/toallas-3.jpg",
@@ -47,7 +47,7 @@
             "blackout": {
                 name: "Cortina Blackout",
                 price: "$80.000",
-                description: "Envuelve tu hogar en calidez y estilo con nuestra manta de lana tejida artesanalmente. Su textura suave y diseño acogedor la hacen ideal para el sofá o como complemento decorativo en tu cama. Confeccionada con materiales de alta calidad, garantizando colores naturales y duraderos.",
+                description: "Transformá tu hogar con nuestras cortinas blackout combinadas! Ofrecen doble funcionalidad: oscuridad total cuando la necesitás y luz filtrada para el día, protegiendo tu privacidad. Además de su estilo versátil, brindan aislamiento térmico y acústico, mejorando el confort de tus ambientes. Son de alta calidad y duraderas, perfectas para cualquier espacio.",
                 images: [
                     "img/blackout.jpg",
                     "img/blackout-2.jpeg",
@@ -55,9 +55,9 @@
                 ]
             },
             "cortina-baño": {
-                name: "Cortina de baño - Razo",
+                name: "Cortina de baño - Raso",
                 price: "$15.000",
-                description: "Añade un toque de color y sofisticación a tu dormitorio con nuestras fundas de almohada decorativas. Confeccionadas con tejidos suaves y duraderos, son el complemento perfecto para cualquier estilo de decoración, brindando confort y elegancia a tu espacio.",
+                description: "Descubrí la elegancia y funcionalidad para tu baño con nuestras cortinas de baño de raso. Fabricadas con un tejido suave y resistente, ofrecen un diseño variado que se adapta a tu estilo: desde motivos marinos y estrellas de mar en tonos vibrantes, hasta sutiles estampados de lunares. Son repelentes al agua, fáciles de limpiar y vienen listas para instalar con sus respectivos ganchos. Dale un toque de frescura y sofisticación a tu baño.",
                 images: [
                     "img/cortina-1.jpeg",
                     "img/cortina-2.jpg",
@@ -65,23 +65,23 @@
                 ]
             },
             "set-repasadores": {
-                name: "Set de Repasadores de Algodón (3 unidades)",
-                price: "$12.000",
+                name: "Set de Repasadores de Algodón (2 unidades)",
+                price: "$7.000",
                 description: "Nuestro set de repasadores de algodón es ideal para mantener tu cocina impecable. Con alta capacidad de absorción y resistencia, vienen en diseños variados que añaden alegría a tus tareas diarias. Son lavables a máquina y conservan su color y forma.",
                 images: [
-                    "https://placehold.co/800x600/FFCDD2/EF5350?text=Set+de+cocina+1",
-                    "https://placehold.co/800x600/EF9A9A/D32F2F?text=Repasador+Individual+2",
-                    "https://placehold.co/800x600/FFEBEE/C62828?text=Repasadores+Colores+3"
+                    "img/repasador.jpg",
+                    "img/repasador-2.jpg",
+                    "img/repasador-3.jpg"
                 ]
             },
             "sabanas-infantiles": {
                 name: "Juego de Sabanas Infantiles",
-                price: "$35.000",
-                description: "Nuestras cortinas opacas ofrecen privacidad total y un control excepcional de la luz. Ideales para dormitorios o salas de estar, ayudan a mantener la temperatura ambiente y a reducir el ruido exterior. Su instalación es sencilla y su caída elegante complementa cualquier espacio.",
+                price: "$40.000",
+                description: "¡Alegrá el cuarto de los chicos con nuestras sábanas infantiles de personajes! Disponibles con Minnie, Mickey y Stitch y más. Estos sets de 3 piezas incluyen sábana superior, ajustable y funda de almohada. Fabricadas con materiales suaves para un descanso cómodo y placentero, transforman su cama en un espacio lleno de diversión. Son el regalo ideal para inspirar sueños mágicos cada noche. ¡Llevá la magia a su habitación!",
                 images: [
-                    "https://placehold.co/800x600/FFF8E1/FFB300?text=Cortina+dormitorio+1",
-                    "https://placehold.co/800x600/FFD180/FF6F00?text=Cortina+Cerrada+2",
-                    "https://placehold.co/800x600/FFECB3/FF8F00?text=Cortina+Abierta+3"
+                    "img/infantil-1.jpg",
+                    "img/infantil-2.jpg",
+                    "img/infantil-3.jpg"
                 ]
             },
             "Mantas": {
@@ -89,9 +89,9 @@
                 price: "$55.000",
                 description: "Renueva tu habitación con nuestro cubrecama estampado, disponible en una variedad de diseños modernos y vibrantes. Ligero y fácil de mantener, es perfecto para añadir un toque de personalidad a tu cama sin sacrificar la comodidad ni la calidad del descanso.",
                 images: [
-                    "https://placehold.co/800x600/CFD8DC/607D8B?text=Cubrecama+estampado+1",
-                    "https://placehold.co/800x600/B0BEC5/455A64?text=Cubrecama+Vista+2",
-                    "https://placehold.co/800x600/90A4AE/263238?text=Cubrecama+Textura+3"
+                    "img/manta-1.jpg",
+                    "img/manta-2.jpg",
+                    "img/manta-3.jpg"
                 ]
             }
         };
