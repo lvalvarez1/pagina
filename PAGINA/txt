@@ -1,0 +1,30 @@
+<!-- Testimonials Section -->
+            <section class="py-5 py-md-6 container px-3 rounded-custom bg-white shadow-lg my-4">
+                <h2 class="fs-2 fw-bold text-dark text-center mb-5 rounded-custom">Lo que Dicen Nuestros Clientes</h2>
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                    <!-- Testimonial 1 -->
+                    <div class="col">
+                        <div class="card h-100 bg-body-tertiary p-4 rounded-custom shadow-sm border border-secondary-subtle">
+                            <p class="text-secondary fst-italic mb-3">"Las sábanas son increíblemente suaves y se sienten de lujo. ¡Mi cama nunca fue tan cómoda!"</p>
+                            <p class="fw-semibold text-dark mb-0">- María L.</p>
+                            <p class="text-sm text-secondary">Buenos Aires, San Miguel</p>
+                        </div>
+                    </div>
+                    <!-- Testimonial 2 -->
+                    <div class="col">
+                        <div class="card h-100 bg-body-tertiary p-4 rounded-custom shadow-sm border border-secondary-subtle">
+                            <p class="text-secondary fst-italic mb-3">"Compré un acolchado y superó mis expectativas. Excelente calidad y el diseño es hermoso."</p>
+                            <p class="fw-semibold text-dark mb-0">- Juan P.</p>
+                            <p class="text-sm text-secondary">Buenos Aires, Moreno</p>
+                        </div>
+                    </div>
+                    <!-- Testimonial 3 -->
+                    <div class="col">
+                        <div class="card h-100 bg-body-tertiary p-4 rounded-custom shadow-sm border border-secondary-subtle">
+                            <p class="text-secondary fst-italic mb-3">"La atención al cliente fue fantástica y el envío muy rápido. ¡Recomiendo Decocuotas al 100%!"</p>
+                            <p class="fw-semibold text-dark mb-0">- Sofía G.</p>
+                            <p class="text-sm text-secondary">Buenos Aires, Malvinas Arg.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
