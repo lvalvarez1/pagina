@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Catálogo PDF</title>
+    <!-- Carga de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; /* Fondo gris claro que combina con pasteles */
+        }
+        .product-item {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .product-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+        /* Estilo para la imagen del producto en la interfaz web y en la vista previa */
+        .product-item img, .sales-product-card img {
+            width: 192px; /* Ancho fijo para la imagen (tailwind w-48) */
+            height: 192px; /* Alto fijo para la imagen (tailwind h-48) */
+            object-fit: cover; /* Asegura que la imagen cubra el área sin distorsión */
+        }
+        .sales-product-card {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .sales-product-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Encabezado con paleta pastel -->
+    <header class="bg-gradient-to-r from-purple-300 to-pink-300 text-white p-6 shadow-lg">
+        <div class="container mx-auto text-center">
+            <h1 class="text-4xl font-bold">Crea tu Catálogo PDF</h1>
+            <p class="text-lg mt-2">Sube tus productos, añade detalles y descarga tu catálogo.</p>
+        </div>
+    </header>
+
+    <!-- Contenido principal -->
+    <main class="container mx-auto p-6 flex-grow">
+        <div class="bg-white rounded-xl shadow-lg p-8 mb-8">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Añadir Productos</h2>
+            <div class="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg p-8 cursor-pointer hover:border-purple-400 transition duration-300"
+                 onclick="document.getElementById('imageUpload').click()">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 0115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                </svg>
+                <p class="text-lg text-gray-600 font-semibold">Haz clic o arrastra y suelta imágenes aquí</p>
+                <input type="file" id="imageUpload" accept="image/*" multiple class="hidden">
+            </div>
+
+            <div id="productList" class="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Los productos se añadirán aquí dinámicamente -->
+            </div>
+
+            <div class="text-center mt-10 flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+                <button id="viewSalesCatalogBtn" class="bg-pink-400 hover:bg-pink-500 text-white font-bold py-4 px-8 rounded-full shadow-xl transition duration-300 transform hover:scale-105 text-xl">
+                    Ver Catálogo de Venta
+                </button>
+                <!-- Botón "Generar Catálogo PDF (Básico)" eliminado -->
+            </div>
+        </div>
+
+        <!-- Sección de Vista Previa del Catálogo de Venta (inicialmente oculta) -->
+        <div id="salesCatalogPreview" class="bg-white rounded-xl shadow-lg p-8 mt-8 hidden">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-3xl font-bold text-gray-800">Vista Previa de Catálogo de Venta</h2>
+                <button id="closePreviewBtn" class="bg-red-400 hover:bg-red-500 text-white font-bold py-2 px-4 rounded-full shadow-md transition duration-300">
+                    Cerrar Vista Previa
+                </button>
+            </div>
+            <div id="salesProductGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Los productos de venta se renderizarán aquí -->
+            </div>
+            <div class="text-center mt-10">
+                <button id="exportSalesPdfBtn" class="bg-green-400 hover:bg-green-500 text-white font-bold py-4 px-8 rounded-full shadow-xl transition duration-300 transform hover:scale-105 text-xl">
+                    Exportar Vista Previa a PDF
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Pie de página -->
+    <footer class="bg-gray-800 text-white p-6 text-center mt-auto">
+        <div class="container mx-auto">
+            <p>&copy; 2025 Tu Negocio en Bella Vista. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- Librerías para generar PDFs y capturar HTML -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script>
+        // Inicializa jsPDF de la ventana global
+        const { jsPDF } = window.jspdf;
+
+        const imageUpload = document.getElementById('imageUpload');
+        const productList = document.getElementById('productList');
+        // const generatePdfBtn = document.getElementById('generatePdfBtn'); // Ya no se usa directamente
+        const viewSalesCatalogBtn = document.getElementById('viewSalesCatalogBtn');
+        const salesCatalogPreview = document.getElementById('salesCatalogPreview');
+        const salesProductGrid = document.getElementById('salesProductGrid');
+        const closePreviewBtn = document.getElementById('closePreviewBtn');
+        let exportSalesPdfBtn; // Se asignará cuando la vista previa sea visible
+
+        let products = []; // Array para almacenar los datos de los productos
+
+        // Función para añadir un producto a la lista de edición
+        function addProductItem(imageUrl, fileName, originalWidth, originalHeight) {
+            const productId = Date.now(); // ID único para cada producto
+            const productDiv = document.createElement('div');
+            productDiv.id = `product-${productId}`;
+            productDiv.className = 'product-item bg-gray-50 rounded-lg shadow-md p-4 flex flex-col items-center relative';
+            productDiv.innerHTML = `
+                <button class="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-xl font-bold"
+                        onclick="removeProduct(${productId})">
+                    &times;
+                </button>
+                <img src="${imageUrl}" alt="${fileName}" class="w-48 h-48 object-cover rounded-md mb-4 border border-gray-200">
+                <input type="text" placeholder="Nombre del Producto" value="${fileName.split('.')[0]}"
+                       class="product-name w-full p-2 border border-gray-300 rounded-md mb-3 focus:outline-none focus:ring-2 focus:ring-purple-400">
+                <input type="number" placeholder="Precio ($)"
+                       class="product-price w-full p-2 border border-gray-300 rounded-md mb-3 focus:outline-none focus:ring-2 focus:ring-purple-400">
+                <textarea placeholder="Descripción breve del producto..." rows="3"
+                          class="product-description w-full p-2 border border-gray-300 rounded-md resize-y focus:outline-none focus:ring-2 focus:ring-purple-400"></textarea>
+            `;
+            productList.appendChild(productDiv);
+
+            // Añadir el producto al array de datos
+            products.push({
+                id: productId,
+                imageUrl: imageUrl,
+                name: fileName.split('.')[0], // Nombre inicial del archivo
+                price: '',
+                description: '',
+                originalWidth: originalWidth,
+                originalHeight: originalHeight
+            });
+
+            // Actualizar los datos del array cuando el usuario escribe
+            const nameInput = productDiv.querySelector('.product-name');
+            const priceInput = productDiv.querySelector('.product-price');
+            const descriptionInput = productDiv.querySelector('.product-description');
+
+            nameInput.addEventListener('input', (e) => {
+                const product = products.find(p => p.id === productId);
+                if (product) product.name = e.target.value;
+            });
+            priceInput.addEventListener('input', (e) => {
+                const product = products.find(p => p.id === productId);
+                if (product) product.price = e.target.value;
+            });
+            descriptionInput.addEventListener('input', (e) => {
+                const product = products.find(p => p.id === productId);
+                if (product) product.description = e.target.value;
+            });
+        }
+
+        // Función para eliminar un producto de la lista
+        function removeProduct(id) {
+            const productElement = document.getElementById(`product-${id}`);
+            if (productElement) {
+                productList.removeChild(productElement);
+                products = products.filter(p => p.id !== id); // Eliminar del array de datos
+            }
+        }
+
+        // Manejar la subida de imágenes
+        imageUpload.addEventListener('change', (event) => {
+            const files = event.target.files;
+            if (files.length === 0) return;
+
+            Array.from(files).forEach(file => {
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const tempImg = new Image();
+                        tempImg.onload = () => {
+                            addProductItem(e.target.result, file.name, tempImg.width, tempImg.height);
+                        };
+                        tempImg.src = e.target.result; // Cargar la imagen para obtener sus dimensiones
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    console.warn(`Archivo no soportado: ${file.name} (${file.type}). Solo se permiten imágenes.`);
+                }
+            });
+        });
+
+        // Manejar el evento de arrastrar y soltar
+        productList.addEventListener('dragover', (event) => {
+            event.preventDefault(); // Prevenir el comportamiento por defecto para permitir el drop
+            event.stopPropagation();
+            event.currentTarget.classList.add('border-purple-400'); // Resaltar el área
+        });
+
+        productList.addEventListener('dragleave', (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            event.currentTarget.classList.remove('border-purple-400'); // Quitar el resaltado
+        });
+
+        productList.addEventListener('drop', (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            event.currentTarget.classList.remove('border-purple-400'); // Quitar el resaltado
+
+            const files = event.dataTransfer.files;
+            if (files.length === 0) return;
+
+            Array.from(files).forEach(file => {
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const tempImg = new Image();
+                        tempImg.onload = () => {
+                            addProductItem(e.target.result, file.name, tempImg.width, tempImg.height);
+                        };
+                        tempImg.src = e.target.result; // Cargar la imagen para obtener sus dimensiones
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    console.warn(`Archivo no soportado: ${file.name} (${file.type}). Solo se permiten imágenes.`);
+                }
+            });
+        });
+
+        // Función para mostrar mensajes en la UI (reemplaza alert())
+        function showUIMessage(message) {
+            const messageBox = document.createElement('div');
+            messageBox.className = 'fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center z-50';
+            messageBox.innerHTML = `
+                <div class="bg-white p-8 rounded-lg shadow-xl text-center">
+                    <p class="text-xl font-semibold text-gray-800 mb-4">${message}</p>
+                    <button class="bg-purple-400 hover:bg-purple-500 text-white font-bold py-2 px-4 rounded-full" onclick="this.parentNode.parentNode.remove()">Entendido</button>
+                </div>
+            `;
+            document.body.appendChild(messageBox);
+        }
+
+        // Generar PDF (Versión Básica, sin la vista de venta) - Esta función ya no está vinculada a un botón
+        // pero se mantiene por si se quiere reutilizar su lógica o reasignar un botón.
+        /*
+        generatePdfBtn.addEventListener('click', () => {
+            if (products.length === 0) {
+                showUIMessage('Por favor, añade al menos un producto para generar el catálogo.');
+                return;
+            }
+
+            const doc = new jsPDF();
+            let yOffset = 20; // Posición inicial Y en el PDF
+            const margin = 10;
+            const pageWidth = doc.internal.pageSize.getWidth();
+            const pageHeight = doc.internal.pageSize.getHeight();
+            const productWidth = (pageWidth - margin * 3) / 2; // Dos productos por fila
+            const productHeight = 100; // Altura estimada para cada producto (imagen + texto)
+            const imagePdfAreaWidth = productWidth - 10; // Área para la imagen dentro del producto en PDF
+            const imagePdfAreaHeight = 60; // Altura máxima para la imagen en PDF
+
+            doc.setFont('Inter', 'normal'); // Establece la fuente Inter
+
+            // Función para añadir el fondo y el encabezado de la página
+            const addPageHeader = () => {
+                // Añadir color de fondo pastel a la página
+                doc.setFillColor(240, 248, 255); // AliceBlue (un azul pastel muy claro)
+                doc.rect(0, 0, pageWidth, pageHeight, 'F'); // Dibujar un rectángulo que cubra toda la página
+
+                // Título del Catálogo
+                doc.setFontSize(28);
+                doc.setTextColor(55, 65, 81); // gray-800
+                doc.text('Nuestro Catálogo', pageWidth / 2, yOffset, { align: 'center' });
+                yOffset += 20;
+
+                doc.setFontSize(10);
+                doc.setTextColor(107, 114, 128); // gray-600
+                doc.text('Generado el ' + new Date().toLocaleDateString('es-AR'), pageWidth / 2, yOffset, { align: 'center' });
+                yOffset += 20;
+            };
+
+            // Añadir el encabezado a la primera página
+            addPageHeader();
+
+            let xPos = margin;
+            let productsInRow = 0;
+
+            products.forEach((product, index) => {
+                // Obtener los valores actuales de los inputs de la interfaz
+                const currentProductDiv = document.getElementById(`product-${product.id}`);
+                if (currentProductDiv) {
+                    product.name = currentProductDiv.querySelector('.product-name').value;
+                    product.price = currentProductDiv.querySelector('.product-price').value;
+                    product.description = currentProductDiv.querySelector('.product-description').value;
+                }
+
+                // Verificar si necesitamos una nueva página
+                if (yOffset + productHeight + margin > pageHeight) {
+                    doc.addPage();
+                    yOffset = margin + 10; // Reiniciar yOffset para la nueva página
+                    xPos = margin; // Reiniciar xPos para la nueva página
+                    productsInRow = 0;
+                    addPageHeader(); // Añadir encabezado a la nueva página
+                }
+
+                // Si es el segundo producto en la fila, mover a la derecha
+                if (productsInRow === 1) {
+                    xPos = pageWidth / 2 + margin / 2; // Posicionar a la derecha
+                } else {
+                    xPos = margin; // Posicionar a la izquierda
+                }
+
+                // Calcular dimensiones de la imagen para que quepa en el PDF manteniendo aspecto
+                let finalImgWidth = imagePdfAreaWidth;
+                let finalImgHeight = (product.originalHeight * finalImgWidth) / product.originalWidth;
+
+                if (finalImgHeight > imagePdfAreaHeight) {
+                    finalImgHeight = imagePdfAreaHeight;
+                    finalImgWidth = (product.originalWidth * finalImgHeight) / product.originalHeight;
+                }
+
+                // Centrar la imagen dentro de su área de producto
+                const imgX = xPos + (imagePdfAreaWidth - finalImgWidth) / 2 + 5; // +5 para padding interno
+                const imgY = yOffset + 5; // +5 para padding interno
+
+                // Añadir imagen al PDF
+                doc.addImage(product.imageUrl, 'JPEG', imgX, imgY, finalImgWidth, finalImgHeight);
+
+                // Añadir nombre del producto
+                doc.setFontSize(14);
+                doc.setTextColor(103, 58, 183); // purple-700
+                doc.text(product.name, xPos + productWidth / 2, yOffset + imagePdfAreaHeight + 10, { align: 'center' });
+
+                // Añadir precio
+                doc.setFontSize(18);
+                doc.setTextColor(236, 72, 153); // pink-600
+                doc.text(`$${product.price}`, xPos + productWidth / 2, yOffset + imagePdfAreaHeight + 20, { align: 'center' });
+
+                // Añadir descripción
+                doc.setFontSize(10);
+                doc.setTextColor(75, 85, 99); // gray-700
+                const splitDescription = doc.splitTextToSize(product.description, productWidth - 10);
+                doc.text(splitDescription, xPos + 5, yOffset + imagePdfAreaHeight + 30);
+
+                productsInRow++;
+                if (productsInRow >= 2) {
+                    yOffset += productHeight + margin; // Mover a la siguiente fila
+                    productsInRow = 0; // Reiniciar contador de productos en fila
+                }
+            });
+
+            doc.save('catalogo-productos-basico.pdf');
+        });
+        */
+
+        // Evento para el nuevo botón "Ver Catálogo de Venta"
+        viewSalesCatalogBtn.addEventListener('click', () => {
+            if (products.length === 0) {
+                showUIMessage('Por favor, añade al menos un producto para ver el catálogo de venta.');
+                return;
+            }
+
+            // Limpiar la vista previa anterior
+            salesProductGrid.innerHTML = '';
+
+            // Renderizar los productos en la vista de venta
+            products.forEach(product => {
+                // Obtener los valores actuales de los inputs de la interfaz de edición
+                const currentProductDiv = document.getElementById(`product-${product.id}`);
+                let currentName = product.name;
+                let currentPrice = product.price;
+                let currentDescription = product.description;
+
+                if (currentProductDiv) {
+                    currentName = currentProductDiv.querySelector('.product-name').value;
+                    currentPrice = currentProductDiv.querySelector('.product-price').value;
+                    currentDescription = currentProductDiv.querySelector('.product-description').value;
+                }
+
+                const salesCard = document.createElement('div');
+                salesCard.className = 'sales-product-card bg-gray-50 rounded-xl shadow-md overflow-hidden flex flex-col';
+                salesCard.innerHTML = `
+                    <img src="${product.imageUrl}" alt="${currentName}" class="w-full h-48 object-cover rounded-t-xl">
+                    <div class="p-4 flex flex-col flex-grow">
+                        <h3 class="text-xl font-semibold text-gray-900 mb-1">${currentName}</h3>
+                        <p class="text-gray-700 text-sm mb-3 flex-grow">${currentDescription}</p>
+                        <div class="flex justify-between items-center mt-auto">
+                            <span class="text-2xl font-bold text-pink-600">$${currentPrice}</span>
+                            <!-- Botón "Comprar" eliminado -->
+                        </div>
+                    </div>
+                `;
+                salesProductGrid.appendChild(salesCard);
+            });
+
+            // Mostrar la sección de vista previa
+            salesCatalogPreview.classList.remove('hidden');
+
+            // Asignar el botón de exportar PDF de la vista de venta si no está asignado
+            if (!exportSalesPdfBtn) {
+                exportSalesPdfBtn = document.getElementById('exportSalesPdfBtn');
+                exportSalesPdfBtn.addEventListener('click', () => {
+                    // Ocultar temporalmente el botón de cerrar y el botón de exportar para que no aparezcan en el PDF
+                    const closeBtnDisplay = closePreviewBtn.style.display;
+                    const exportBtnDisplay = exportSalesPdfBtn.style.display;
+                    closePreviewBtn.style.display = 'none';
+                    exportSalesPdfBtn.style.display = 'none';
+
+                    html2canvas(salesCatalogPreview, {
+                        scale: 2, // Aumentar la escala para mejor calidad en el PDF
+                        useCORS: true, // Importante para imágenes cargadas localmente
+                        logging: false // Desactivar logs de html2canvas
+                    }).then(canvas => {
+                        const imgData = canvas.toDataURL('image/jpeg', 1.0); // Calidad 1.0
+
+                        const pdf = new jsPDF({
+                            orientation: 'portrait',
+                            unit: 'px',
+                            format: [canvas.width, canvas.height] // Usar el tamaño del canvas para el PDF
+                        });
+
+                        // Calcular dimensiones para que la imagen ocupe toda la página del PDF
+                        const imgWidth = pdf.internal.pageSize.getWidth();
+                        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+                        pdf.addImage(imgData, 'JPEG', 0, 0, imgWidth, imgHeight);
+                        pdf.save('catalogo-venta-visual.pdf');
+
+                        // Restaurar la visibilidad de los botones
+                        closePreviewBtn.style.display = closeBtnDisplay;
+                        exportSalesPdfBtn.style.display = exportBtnDisplay;
+                    }).catch(error => {
+                        console.error('Error al generar el PDF de la vista de venta:', error);
+                        showUIMessage('Hubo un error al generar el PDF de la vista previa. Asegúrate de que las imágenes estén cargadas correctamente.');
+                        // Restaurar la visibilidad de los botones en caso de error
+                        closePreviewBtn.style.display = 'block';
+                        exportSalesPdfBtn.style.display = 'block';
+                    });
+                });
+            }
+        });
+
+        // Evento para cerrar la vista previa
+        closePreviewBtn.addEventListener('click', () => {
+            salesCatalogPreview.classList.add('hidden');
+        });
+    </script>
+</body>
+</html>

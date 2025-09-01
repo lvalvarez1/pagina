@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controlador de Stock</title>
+    <!-- Tailwind CSS CDN para estilos -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; /* Fondo gris claro */
+        }
+        /* Barra de desplazamiento personalizada para listas de productos */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #e0e0e0;
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        /* Estilos específicos del modal */
+        .modal {
+            display: none; /* Oculto por defecto */
+            position: fixed; /* Permanece en su lugar */
+            z-index: 1000; /* Se sitúa encima */
+            left: 0;
+            top: 0;
+            width: 100%; /* Ancho completo */
+            height: 100%; /* Alto completo */
+            overflow: auto; /* Habilita el desplazamiento si es necesario */
+            background-color: rgba(0,0,0,0.4); /* Negro con opacidad */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 90%;
+            max-height: 90%;
+            overflow-y: auto;
+        }
+        .close-button {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close-button:hover,
+        .close-button:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-6 lg:p-8">
+
+    <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-xl">
+        <h1 class="text-3xl font-bold text-center mb-6 text-gray-800">Controlador de Stock</h1>
+
+        <!-- Cuadro de Mensajes -->
+        <div id="messageBox" class="hidden bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded relative mb-6" role="alert">
+            <span id="messageText" class="block sm:inline"></span>
+            <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
+                <svg id="closeMessageBox" class="fill-current h-6 w-6 text-blue-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><title>Cerrar</title><path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"/></svg>
+            </span>
+        </div>
+
+        <!-- Sección Añadir Producto -->
+        <div class="mb-8 p-6 bg-gray-50 rounded-lg shadow-sm">
+            <h2 class="text-2xl font-semibold mb-4 text-gray-700">Añadir Producto</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <input type="text" id="productName" placeholder="Nombre del Producto" class="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <input type="number" id="productPrice" placeholder="Precio" class="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 min-w-0" step="0.01" min="0">
+                <input type="number" id="productQuantity" placeholder="Cantidad" class="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 min-w-0" min="1">
+            </div>
+            <button id="addProductBtn" class="mt-4 w-full bg-indigo-600 text-white p-3 rounded-md hover:bg-indigo-700 transition duration-300 ease-in-out transform hover:scale-105 shadow-md">
+                Añadir Producto al Stock
+            </button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Sección Productos en Stock -->
+            <div class="p-6 bg-gray-50 rounded-lg shadow-sm">
+                <h2 class="text-2xl font-semibold mb-4 text-gray-700">Productos en Stock</h2>
+                <div id="productList" class="space-y-4 max-h-96 overflow-y-auto custom-scrollbar">
+                    <!-- Los productos se listarán aquí -->
+                    <p class="text-gray-500">Cargando productos...</p>
+                </div>
+            </div>
+
+            <!-- Sección Carrito -->
+            <div class="p-6 bg-gray-50 rounded-lg shadow-sm">
+                <h2 class="text-2xl font-semibold mb-4 text-gray-700">Carrito de Venta</h2>
+                <div id="cartList" class="space-y-4 max-h-96 overflow-y-auto custom-scrollbar">
+                    <!-- Los ítems del carrito se listarán aquí -->
+                    <p class="text-gray-500">El carrito está vacío.</p>
+                </div>
+                <div class="mt-6">
+                    <p class="text-xl font-bold text-gray-800">Total del Carrito: <span id="cartTotal">$0.00</span></p>
+                    <button id="sellProductsBtn" class="mt-4 w-full bg-green-600 text-white p-3 rounded-md hover:bg-green-700 transition duration-300 ease-in-out transform hover:scale-105 shadow-md">
+                        Vender Productos
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Botones de Resumen y Descarga -->
+        <div class="mt-8 text-center flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+            <button id="showStockBtn" class="bg-blue-600 text-white p-4 rounded-full text-lg font-bold hover:bg-blue-700 transition duration-300 ease-in-out transform hover:scale-110 shadow-lg">
+                Ver Stock de Hoy
+            </button>
+            <button id="downloadStockBtn" class="bg-purple-600 text-white p-4 rounded-full text-lg font-bold hover:bg-purple-700 transition duration-300 ease-in-out transform hover:scale-110 shadow-lg">
+                Descargar Stock como JSON
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal de Stock -->
+    <div id="stockModal" class="modal hidden">
+        <div class="modal-content w-full sm:w-2/3 lg:w-1/2">
+            <span class="close-button" id="closeModalBtn">&times;</span>
+            <h2 class="text-2xl font-bold mb-4 text-gray-800">Stock Actual</h2>
+            <div id="modalStockList" class="space-y-3 max-h-96 overflow-y-auto custom-scrollbar pb-4">
+                <!-- Los detalles del stock se mostrarán aquí -->
+                <p class="text-gray-500">Cargando stock...</p>
+            </div>
+            <p class="text-xl font-bold text-gray-800 border-t pt-4 mt-4">Total de Artículos en Stock: <span id="totalStockItems">0</span></p>
+            <p class="text-xl font-bold text-gray-800 mt-2">Valor Total del Stock: <span id="totalStockValue">$0.00</span></p>
+        </div>
+    </div>
+
+    <script type="module">
+        // El inventario ahora se gestiona y persiste localmente usando localStorage.
+        let inventory = [];
+        let cart = []; // El carrito permanece local para operaciones de sesión
+
+        // Obtener elementos del DOM
+        const productNameInput = document.getElementById('productName');
+        const productPriceInput = document.getElementById('productPrice');
+        const productQuantityInput = document.getElementById('productQuantity');
+        const addProductBtn = document.getElementById('addProductBtn');
+        const productList = document.getElementById('productList');
+        const cartList = document.getElementById('cartList');
+        const cartTotalSpan = document.getElementById('cartTotal');
+        const sellProductsBtn = document.getElementById('sellProductsBtn');
+        const showStockBtn = document.getElementById('showStockBtn');
+        const downloadStockBtn = document.getElementById('downloadStockBtn'); // Nuevo botón para descargar
+        const stockModal = document.getElementById('stockModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const modalStockList = document.getElementById('modalStockList');
+        const totalStockItemsSpan = document.getElementById('totalStockItems');
+        const totalStockValueSpan = document.getElementById('totalStockValue');
+        const messageBox = document.getElementById('messageBox');
+        const messageText = document.getElementById('messageText');
+        const closeMessageBox = document.getElementById('closeMessageBox');
+
+        /**
+         * Muestra un mensaje en el cuadro de mensajes.
+         * @param {string} message - El mensaje a mostrar.
+         * @param {string} type - Tipo de mensaje ('success', 'error', 'info').
+         */
+        function showMessage(message, type) {
+            messageText.textContent = message;
+            messageBox.classList.remove('hidden', 'bg-blue-100', 'border-blue-400', 'text-blue-700', 'bg-green-100', 'border-green-400', 'text-green-700', 'bg-red-100', 'border-red-400', 'text-red-700');
+            
+            let bgColor = 'bg-blue-100';
+            let borderColor = 'border-blue-400';
+            let textColor = 'text-blue-700';
+
+            if (type === 'success') {
+                bgColor = 'bg-green-100';
+                borderColor = 'border-green-400';
+                textColor = 'text-green-700';
+            } else if (type === 'error') {
+                bgColor = 'bg-red-100';
+                borderColor = 'border-red-400';
+                textColor = 'text-red-700';
+            } else if (type === 'info') {
+                bgColor = 'bg-blue-100';
+                borderColor = 'border-blue-400';
+                textColor = 'text-blue-700';
+            }
+
+            messageBox.classList.add(bgColor, borderColor, textColor);
+            messageBox.classList.remove('hidden');
+
+            // Ocultar mensaje después de 5 segundos
+            setTimeout(() => {
+                messageBox.classList.add('hidden');
+            }, 5000);
+        }
+
+        // Oyente de eventos para cerrar el cuadro de mensajes manualmente
+        closeMessageBox.addEventListener('click', () => {
+            messageBox.classList.add('hidden');
+        });
+
+        /**
+         * Guarda el inventario actual en localStorage.
+         */
+        function saveInventoryToLocalStorage() {
+            try {
+                localStorage.setItem('stockInventory', JSON.stringify(inventory));
+                console.log('Inventario guardado en localStorage.');
+            } catch (e) {
+                console.error('Error al guardar en localStorage:', e);
+                showMessage('Error al guardar datos localmente. El navegador puede estar lleno.', 'error');
+            }
+        }
+
+        /**
+         * Carga el inventario desde localStorage al iniciar la aplicación.
+         */
+        function loadInventoryFromLocalStorage() {
+            try {
+                const storedInventory = localStorage.getItem('stockInventory');
+                if (storedInventory) {
+                    inventory = JSON.parse(storedInventory);
+                    // Asegurarse de que todos los productos tengan un ID si no lo tenían antes (para compatibilidad)
+                    // Y un contador para los nuevos productos si no usamos Firebase ID.
+                    let maxId = 0;
+                    inventory.forEach(p => {
+                        if (p.id === undefined) p.id = Date.now() + Math.random(); // Asignar un ID único simple
+                        if (typeof p.id === 'number') { // Si el ID es numérico, lo usamos para el contador
+                            maxId = Math.max(maxId, p.id);
+                        }
+                    });
+                    // Para asignar IDs únicos si agregamos nuevos productos localmente.
+                    // En este caso, ya no usamos Firebase, por lo que el ID puede ser un número o una cadena generada.
+                    // Para simplificar, mantendremos IDs generados aleatoriamente si no existen.
+                }
+            } catch (e) {
+                console.error('Error al cargar desde localStorage:', e);
+                showMessage('Error al cargar datos localmente. Los datos pueden estar corruptos.', 'error');
+                inventory = []; // Resetear inventario si hay error
+            }
+        }
+
+        /**
+         * Renderiza el inventario actual en la vista de la lista de productos.
+         */
+        function renderProductList() {
+            productList.innerHTML = ''; // Limpiar la lista actual
+            if (inventory.length === 0) {
+                productList.innerHTML = '<p class="text-gray-500">No hay productos en stock.</p>';
+                return;
+            }
+            inventory.forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.id = `product-${product.id}`;
+                productCard.className = 'bg-white p-4 rounded-lg shadow-sm flex items-center justify-between border border-gray-200';
+                productCard.innerHTML = `
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-800">${product.name}</h3>
+                        <p class="text-gray-600">Precio: $${product.price.toFixed(2)}</p>
+                        <p class="text-gray-600" id="stock-qty-${product.id}">Cantidad: ${product.quantity}</p>
+                    </div>
+                    <button data-product-id="${product.id}" class="add-to-cart-btn bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-200 ease-in-out text-sm font-medium">
+                        Añadir al Carrito
+                    </button>
+                `;
+                productList.appendChild(productCard);
+            });
+
+            // Añadir oyentes de eventos para los botones "Añadir al Carrito"
+            document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    const productId = event.target.dataset.productId;
+                    addProductToCart(productId);
+                });
+            });
+        }
+
+        /**
+         * Renderiza los ítems actuales del carrito en la vista de la lista del carrito.
+         */
+        function renderCartList() {
+            cartList.innerHTML = ''; // Limpiar la lista actual
+            let totalCartValue = 0;
+
+            if (cart.length === 0) {
+                cartList.innerHTML = '<p class="text-gray-500">El carrito está vacío.</p>';
+                cartTotalSpan.textContent = '$0.00';
+                return;
+            }
+
+            cart.forEach(item => {
+                const cartItemCard = document.createElement('div');
+                cartItemCard.id = `cart-item-${item.id}`;
+                cartItemCard.className = 'bg-white p-4 rounded-lg shadow-sm flex items-center justify-between border border-gray-200';
+                cartItemCard.innerHTML = `
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-800">${item.name}</h3>
+                        <p class="text-gray-600">Precio unitario: $${item.price.toFixed(2)}</p>
+                        <p class="text-gray-600">Subtotal: $${(item.price * item.quantity).toFixed(2)}</p>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <input type="number" value="${item.quantity}" min="1" data-product-id="${item.id}" class="cart-quantity-input w-20 p-2 border border-gray-300 rounded-md text-center focus:outline-none focus:ring-1 focus:ring-blue-500">
+                        <button data-product-id="${item.id}" class="remove-from-cart-btn bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600 transition duration-200 ease-in-out text-sm font-medium">
+                            Eliminar
+                        </button>
+                    </div>
+                `;
+                cartList.appendChild(cartItemCard);
+                totalCartValue += item.price * item.quantity;
+            });
+            cartTotalSpan.textContent = `$${totalCartValue.toFixed(2)}`;
+
+            // Añadir oyentes de eventos para cambios de cantidad en el carrito
+            document.querySelectorAll('.cart-quantity-input').forEach(input => {
+                input.addEventListener('change', (event) => {
+                    const productId = event.target.dataset.productId;
+                    const newQuantity = parseInt(event.target.value);
+                    updateCartItemQuantity(productId, newQuantity);
+                });
+            });
+
+            // Añadir oyentes de eventos para los botones "Eliminar" en el carrito
+            document.querySelectorAll('.remove-from-cart-btn').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    const productId = event.target.dataset.productId;
+                    removeProductFromCart(productId);
+                });
+            });
+        }
+
+        /**
+         * Añade un nuevo producto al inventario (o actualiza uno existente).
+         */
+        addProductBtn.addEventListener('click', () => {
+            const name = productNameInput.value.trim();
+            const price = parseFloat(productPriceInput.value);
+            const quantity = parseInt(productQuantityInput.value);
+
+            if (!name || isNaN(price) || price <= 0 || isNaN(quantity) || quantity <= 0) {
+                showMessage('Por favor, complete todos los campos correctamente. El precio y la cantidad deben ser números positivos.', 'error');
+                return;
+            }
+
+            const existingProduct = inventory.find(p => p.name.toLowerCase() === name.toLowerCase());
+
+            if (existingProduct) {
+                existingProduct.quantity += quantity;
+                showMessage(`Cantidad de "${name}" actualizada en stock.`, 'info');
+            } else {
+                const newProduct = {
+                    id: Date.now().toString(), // Generar un ID único simple basado en el tiempo
+                    name,
+                    price,
+                    quantity
+                };
+                inventory.push(newProduct);
+                showMessage(`"${name}" añadido al stock.`, 'success');
+            }
+
+            // Limpiar campos del formulario
+            productNameInput.value = '';
+            productPriceInput.value = '';
+            productQuantityInput.value = '';
+
+            saveInventoryToLocalStorage(); // Guardar cambios en localStorage
+            renderProductList(); // Re-renderizar la lista de productos
+        });
+
+        /**
+         * Añade un producto del inventario al carrito.
+         * @param {string} productId - El ID del producto a añadir al carrito.
+         */
+        function addProductToCart(productId) {
+            const productInStock = inventory.find(p => p.id === productId);
+
+            if (!productInStock || productInStock.quantity <= 0) {
+                showMessage('No hay suficiente stock de este producto.', 'error');
+                return;
+            }
+
+            const itemInCart = cart.find(item => item.id === productId);
+
+            if (itemInCart) {
+                // Si el artículo ya está en el carrito, incrementar su cantidad
+                if (productInStock.quantity > itemInCart.quantity) {
+                    itemInCart.quantity++;
+                    showMessage(`Cantidad de "${itemInCart.name}" en el carrito actualizada.`, 'info');
+                } else {
+                    showMessage('No hay más stock disponible para añadir a este producto al carrito.', 'error');
+                    return;
+                }
+            } else {
+                // Si el artículo no está en el carrito, añadirlo con cantidad 1
+                cart.push({
+                    id: productInStock.id,
+                    name: productInStock.name,
+                    price: productInStock.price,
+                    quantity: 1
+                });
+                showMessage(`"${productInStock.name}" añadido al carrito.`, 'success');
+            }
+            renderCartList();
+        }
+
+        /**
+         * Actualiza la cantidad de un producto en el carrito.
+         * @param {string} productId - El ID del producto en el carrito.
+         * @param {number} newQuantity - La nueva cantidad para el artículo.
+         */
+        function updateCartItemQuantity(productId, newQuantity) {
+            const itemIndex = cart.findIndex(item => item.id === productId);
+            if (itemIndex > -1) {
+                const productInStock = inventory.find(p => p.id === productId);
+
+                if (newQuantity <= 0) {
+                    removeProductFromCart(productId);
+                    showMessage(`"${cart[itemIndex].name}" eliminado del carrito.`, 'info');
+                    return;
+                }
+
+                if (newQuantity > productInStock.quantity) {
+                    showMessage(`No hay suficiente stock para ajustar la cantidad a ${newQuantity}. Stock disponible: ${productInStock.quantity}`, 'error');
+                    // Restablecer el input a la cantidad máxima disponible
+                    document.querySelector(`#cart-item-${productId} .cart-quantity-input`).value = cart[itemIndex].quantity;
+                    return;
+                }
+
+                cart[itemIndex].quantity = newQuantity;
+                showMessage(`Cantidad de "${cart[itemIndex].name}" en el carrito actualizada a ${newQuantity}.`, 'info');
+                renderCartList();
+            }
+        }
+
+        /**
+         * Elimina un producto del carrito.
+         * @param {string} productId - El ID del producto a eliminar del carrito.
+         */
+        function removeProductFromCart(productId) {
+            const initialCartLength = cart.length;
+            cart = cart.filter(item => item.id !== productId);
+            if (cart.length < initialCartLength) {
+                showMessage('Producto eliminado del carrito.', 'success');
+            }
+            renderCartList();
+        }
+
+        /**
+         * Simula la venta de productos del carrito, actualizando el inventario.
+         */
+        sellProductsBtn.addEventListener('click', () => {
+            if (cart.length === 0) {
+                showMessage('El carrito está vacío. Añade productos para vender.', 'error');
+                return;
+            }
+
+            let saleSuccessful = true;
+            let soldItems = [];
+
+            // Primero, verificar si hay suficiente stock para todos los ítems en el carrito
+            for (const cartItem of cart) {
+                const productInStock = inventory.find(p => p.id === cartItem.id);
+                if (!productInStock || productInStock.quantity < cartItem.quantity) {
+                    showMessage(`Error: No hay suficiente stock de "${cartItem.name}". Stock disponible: ${productInStock ? productInStock.quantity : 0}.`, 'error');
+                    saleSuccessful = false;
+                    break;
+                }
+            }
+
+            if (saleSuccessful) {
+                cart.forEach(cartItem => {
+                    const productInStock = inventory.find(p => p.id === cartItem.id);
+                    if (productInStock) {
+                        productInStock.quantity -= cartItem.quantity;
+                        soldItems.push({ name: cartItem.name, quantity: cartItem.quantity });
+                        // Actualizar la cantidad en la lista de productos inmediatamente
+                        const stockQtySpan = document.getElementById(`stock-qty-${productInStock.id}`);
+                        if (stockQtySpan) {
+                            stockQtySpan.textContent = `Cantidad: ${productInStock.quantity}`;
+                        }
+                    }
+                });
+                cart = []; // Limpiar el carrito
+                showMessage(`Venta realizada con éxito: ${soldItems.map(item => `${item.name} (${item.quantity})`).join(', ')}.`, 'success');
+                saveInventoryToLocalStorage(); // Guardar cambios en localStorage
+                renderProductList(); // Volver a renderizar la lista de productos para reflejar las nuevas cantidades
+                renderCartList(); // Volver a renderizar el carrito (debería estar vacío ahora)
+            }
+        });
+
+        /**
+         * Abre el modal de stock y lo rellena con los datos actuales del inventario.
+         */
+        showStockBtn.addEventListener('click', () => {
+            modalStockList.innerHTML = ''; // Limpiar contenido previo
+            let totalItems = 0;
+            let totalStockValue = 0; // Inicializar el valor total del stock
+
+            if (inventory.length === 0) {
+                modalStockList.innerHTML = '<p class="text-gray-500">No hay productos en stock actualmente.</p>';
+            } else {
+                inventory.forEach(product => {
+                    const stockItemDiv = document.createElement('div');
+                    stockItemDiv.className = 'bg-gray-100 p-3 rounded-md flex justify-between items-center';
+                    stockItemDiv.innerHTML = `
+                        <span class="font-medium text-gray-700">${product.name}</span>
+                        <span class="text-gray-600">Cantidad: ${product.quantity}</span>
+                        <span class="text-gray-600">Precio: $${product.price.toFixed(2)}</span>
+                    `;
+                    modalStockList.appendChild(stockItemDiv);
+                    totalItems += product.quantity;
+                    totalStockValue += product.quantity * product.price; // Calcular el valor para cada producto
+                });
+            }
+            totalStockItemsSpan.textContent = totalItems;
+            totalStockValueSpan.textContent = `$${totalStockValue.toFixed(2)}`; // Mostrar el valor total del stock
+            stockModal.classList.remove('hidden'); // Mostrar el modal
+        });
+
+        /**
+         * Permite al usuario descargar el inventario actual como un archivo JSON.
+         */
+        downloadStockBtn.addEventListener('click', () => {
+            const dataStr = JSON.stringify(inventory, null, 2); // Formatear JSON para legibilidad
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'stock_inventario.json'; // Nombre del archivo a descargar
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url); // Liberar la URL del objeto
+            
+            showMessage('Stock descargado como stock_inventario.json', 'success');
+        });
+
+        /**
+         * Cierra el modal de stock.
+         */
+        closeModalBtn.addEventListener('click', () => {
+            stockModal.classList.add('hidden'); // Ocultar el modal
+        });
+
+        // Cerrar el modal al hacer clic fuera de él
+        window.addEventListener('click', (event) => {
+            if (event.target === stockModal) {
+                stockModal.classList.add('hidden');
+            }
+        });
+
+        // Al cargar la ventana, intentar cargar el inventario guardado.
+        window.onload = () => {
+            loadInventoryFromLocalStorage();
+            renderProductList(); // Renderizar la lista inicial después de cargar
+            renderCartList(); // Renderizar el carrito inicial
+        };
+    </script>
+</body>
+</html>

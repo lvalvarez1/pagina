@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversor de JSON y Excel</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- SheetJS (xlsx.js) CDN para manejar archivos Excel (XLSX) -->
+    <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; /* bg-gray-100 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 1rem;
+        }
+        .container {
+            background-color: #ffffff; /* bg-white */
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-lg */
+            padding: 2.5rem; /* p-10 */
+            max-width: 900px; /* max-w-2xl */
+            width: 100%;
+            display: grid;
+            gap: 2rem; /* gap-8 */
+            grid-template-columns: 1fr;
+        }
+        @media (min-width: 768px) { /* md:grid-cols-2 */
+            .container {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        .section {
+            background-color: #f9fafb; /* bg-gray-50 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1.5rem; /* p-6 */
+            border: 1px solid #e5e7eb; /* border-gray-200 */
+        }
+        .btn {
+            background-color: #4f46e5; /* bg-indigo-600 */
+            color: #ffffff; /* text-white */
+            padding: 0.75rem 1.5rem; /* py-3 px-6 */
+            border-radius: 0.5rem; /* rounded-lg */
+            font-weight: 600; /* font-semibold */
+            transition: background-color 0.3s ease;
+            cursor: pointer;
+            width: 100%;
+            text-align: center;
+            border: none;
+            display: inline-block; /* To allow text-align */
+        }
+        .btn:hover {
+            background-color: #4338ca; /* bg-indigo-700 */
+        }
+        .file-input-wrapper {
+            display: block;
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #d1d5db; /* border-gray-300 */
+            border-radius: 0.375rem; /* rounded-md */
+            background-color: #ffffff; /* bg-white */
+        }
+        .message-box {
+            background-color: #e0f2fe; /* bg-blue-100 */
+            color: #1e40af; /* text-blue-800 */
+            border-left: 4px solid #3b82f6; /* border-blue-500 */
+            padding: 1rem;
+            margin-top: 1rem;
+            border-radius: 0.375rem;
+            font-size: 0.875rem; /* text-sm */
+            display: none; /* hidden by default */
+        }
+        .message-box.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sección de JSON a Excel (XLSX) -->
+        <div class="section flex flex-col items-center">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-6">JSON a Excel (XLSX)</h2>
+            <p class="text-gray-600 text-sm text-center mb-4">
+                Sube un archivo JSON para convertirlo a un archivo Excel (XLSX).
+            </p>
+            <input type="file" id="jsonInput" accept=".json" class="file-input-wrapper mb-4">
+            <button id="convertJsonToExcel" class="btn mb-4">Convertir JSON a XLSX</button>
+            <a id="downloadExcelFromJson" class="btn bg-gray-500 hover:bg-gray-600 hidden" download="output.xlsx">Descargar XLSX</a>
+            <div id="jsonExcelMessage" class="message-box"></div>
+        </div>
+
+        <!-- Sección de Excel (XLSX) a JSON -->
+        <div class="section flex flex-col items-center">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-6">Excel (XLSX) a JSON</h2>
+            <p class="text-gray-600 text-sm text-center mb-4">
+                Sube un archivo Excel (XLSX) para convertirlo a un archivo JSON.
+            </p>
+            <input type="file" id="excelInput" accept=".xlsx" class="file-input-wrapper mb-4">
+            <button id="convertExcelToJson" class="btn mb-4">Convertir XLSX a JSON</button>
+            <a id="downloadJsonFromExcel" class="btn bg-gray-500 hover:bg-gray-600 hidden" download="output.json">Descargar JSON</a>
+            <div id="excelJsonMessage" class="message-box"></div>
+        </div>
+    </div>
+
+    <script>
+        // Function to display messages to the user
+        function showMessage(elementId, message, type = 'info') {
+            const messageBox = document.getElementById(elementId);
+            messageBox.textContent = message;
+            messageBox.className = 'message-box active'; // Reset classes and activate
+            if (type === 'error') {
+                messageBox.classList.add('bg-red-100', 'text-red-800', 'border-red-500');
+            } else {
+                messageBox.classList.add('bg-blue-100', 'text-blue-800', 'border-blue-500');
+            }
+        }
+
+        // Function to hide messages
+        function hideMessage(elementId) {
+            document.getElementById(elementId).className = 'message-box'; // Deactivate
+        }
+
+        // --- JSON to Excel (XLSX) ---
+        document.getElementById('convertJsonToExcel').addEventListener('click', () => {
+            const jsonFile = document.getElementById('jsonInput').files[0];
+            const downloadLink = document.getElementById('downloadExcelFromJson');
+            hideMessage('jsonExcelMessage');
+            downloadLink.classList.add('hidden'); // Hide download link initially
+
+            if (!jsonFile) {
+                showMessage('jsonExcelMessage', 'Por favor, selecciona un archivo JSON.', 'error');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const jsonData = JSON.parse(e.target.result);
+
+                    if (!Array.isArray(jsonData) && typeof jsonData !== 'object') {
+                        showMessage('jsonExcelMessage', 'El JSON debe ser un array de objetos o un objeto singular.', 'error');
+                        return;
+                    }
+
+                    let dataToProcess = jsonData;
+                    if (!Array.isArray(jsonData)) {
+                        dataToProcess = [jsonData]; // Wrap single object in an array
+                    }
+
+                    if (dataToProcess.length === 0) {
+                        showMessage('jsonExcelMessage', 'El JSON está vacío o no contiene datos válidos.', 'error');
+                        return;
+                    }
+
+                    // Create a new workbook and add a worksheet
+                    const wb = XLSX.utils.book_new();
+                    const ws = XLSX.utils.json_to_sheet(dataToProcess);
+                    XLSX.utils.book_append_sheet(wb, ws, "Datos"); // Name the sheet "Datos"
+
+                    // Generate file name
+                    const outputFileName = jsonFile.name.replace('.json', '.xlsx');
+
+                    // Write the workbook to an XLSX file and trigger download
+                    XLSX.writeFile(wb, outputFileName);
+
+                    showMessage('jsonExcelMessage', '¡JSON convertido a XLSX con éxito!', 'info');
+
+                } catch (error) {
+                    showMessage('jsonExcelMessage', `Error al procesar el archivo JSON: ${error.message}. Asegúrate de que sea un JSON válido.`, 'error');
+                }
+            };
+            reader.readAsText(jsonFile);
+        });
+
+        // --- Excel (XLSX) to JSON ---
+        document.getElementById('convertExcelToJson').addEventListener('click', () => {
+            const excelFile = document.getElementById('excelInput').files[0];
+            const downloadLink = document.getElementById('downloadJsonFromExcel');
+            hideMessage('excelJsonMessage');
+            downloadLink.classList.add('hidden'); // Hide download link initially
+
+            if (!excelFile) {
+                showMessage('excelJsonMessage', 'Por favor, selecciona un archivo Excel (XLSX).', 'error');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+
+                    // Assuming data is in the first sheet
+                    const firstSheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[firstSheetName];
+
+                    // Convert sheet to JSON
+                    const jsonData = XLSX.utils.sheet_to_json(worksheet);
+
+                    if (jsonData.length === 0) {
+                        showMessage('excelJsonMessage', 'El archivo Excel no contiene datos válidos en la primera hoja.', 'error');
+                        return;
+                    }
+
+                    const jsonOutput = JSON.stringify(jsonData, null, 4); // Pretty print JSON
+
+                    const blob = new Blob([jsonOutput], { type: 'application/json;charset=utf-8;' });
+                    const url = URL.createObjectURL(blob);
+                    downloadLink.href = url;
+                    downloadLink.download = excelFile.name.replace('.xlsx', '.json');
+                    downloadLink.classList.remove('hidden');
+                    showMessage('excelJsonMessage', '¡XLSX convertido a JSON con éxito! Haz clic en "Descargar JSON".', 'info');
+
+                } catch (error) {
+                    showMessage('excelJsonMessage', `Error al procesar el archivo Excel: ${error.message}. Asegúrate de que sea un archivo XLSX válido.`, 'error');
+                }
+            };
+            reader.readAsArrayBuffer(excelFile);
+        });
+    </script>
+</body>
+</html>
